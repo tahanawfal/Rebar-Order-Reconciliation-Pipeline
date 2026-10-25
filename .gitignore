@@ -6,3 +6,4 @@
 *.json
 *.zip
 /src/__pycache__
+/src/old files
