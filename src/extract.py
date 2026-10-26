@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pandas as pd
 
@@ -7,15 +8,16 @@ class Extract:
     def __init__(self):
         pass
 
-    def iterate_folder(self, source, folder_path):
+    def iterate_folder(self, folder_path: dict[str, Path]) -> dict[Path, str]:
         path_dict = {}
-        for p in folder_path.rglob("*"):
-            if p.is_file():
-                path_dict[p.name] = folder_path
+        for source_name, source_path in folder_path.items():
+            for path in source_path.rglob("*"):
+                if path.is_file():
+                    path_dict[path.as_posix()] = source_name
         return path_dict
 
     def read_excel(self, file_path) -> dict:
-        return pd.read_excel(file_path, sheet_name=None, header=False)
+        return pd.read_excel(file_path, sheet_name=None, header=None)
     
     def filter_sheet(self):
         pass

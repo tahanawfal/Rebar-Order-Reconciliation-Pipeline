@@ -14,32 +14,47 @@ class ManageDates:
             "%d-%m",
             "%Y"
         ]
+        self.get_creation_date()
+        self.get_modification_date()
+        self.get_date_from_folder_name()
+        self.get_date_from_file_name()
     
+    def export_dates_from_file(self, file_path):
+        return {
+            'file_path': file_path.as_posix(),
+            'file_creation_date': self.get_creation_date(),
+            'file_modification_date': self.get_modification_date(),
+            'folder_name_date': self.get_date_from_folder_name(),
+            'file_name_date': self.get_date_from_file_name()
+        }
+
     def get_creation_date(self, file_path):
-        file_stat = Path(file_path).stat()
-        timestamp = file_stat.st_mtime
+        timestamp = Path(file_path).stat().st_ctime
+        return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d')
+
+    def get_modification_date(self, file_path):
+        timestamp = Path(file_path).stat().st_mtime
         return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d')
     
     def get_date_from_folder_name(self, file_path):
-        folder_name = Path(file_path).parent.absolute()
+        folder_name = file_path.parent.absolute().name.strip()
         for format in self.commmon_formats:
             try:
-                dt = datetime.strptime(folder_name.name.strip(), format)
-                return dt
+                dt = datetime.strptime(folder_name, format)
+                return dt.strftime("%Y-%m")
             except ValueError:
                 continue
       
     def get_date_from_file_name(self, file_path):
-        file_name = Path(file_path).stem
+        file_name = file_path.stem.strip()
         for format in self.commmon_formats:
             try:
-                dt = datetime.strptime(file_name.strip(), format)
-                return dt
+                dt = datetime.strptime(file_name, format)
+                return dt.strftime("%Y-%m-%d")
             except ValueError:
                 continue
 
-    def export_dates_from_file(self):
-        pass
+
 
     def export_date_from_first_row(self):
         pass

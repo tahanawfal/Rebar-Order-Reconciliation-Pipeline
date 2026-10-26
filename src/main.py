@@ -26,9 +26,8 @@ input_folders = {
     "weighbridge": input_path / "weighbridge",
 }
 
-# creating lists of file pathes inside these input folders
-for source_name, source_path in input_folders.items():
-    files = extract.iterate_folder(source_name , source_path)
+# creating dict of file pathes inside these input folders
+files = extract.iterate_folder(input_folders)
 
 for excel_path, source in files.items():
     # get file properties before reading it
